@@ -1,0 +1,442 @@
+body {
+  font-family: 'Libre Franklin', sans-serif;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.outer {
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+.main {
+    display: flex;
+}
+
+  .navbar {
+    background-color: #c0dfd98e;
+    font-size: 20px;
+    border-top: 5px solid #ffc861;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    color: blue;
+  }
+
+  .title-text {
+    color: black;
+    text-decoration-line: none;
+    font-size: 18px;
+  }
+
+  .logo {
+    padding-left: 30px;
+  }
+
+  .title {
+    margin-left: 160px;
+    flex-grow: 1;
+    text-align: center;
+  }
+
+  .search-bar input {
+    width: 100%;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    padding-right: 0px;
+  }
+
+  .user-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .user-actions a {
+    margin-left: 10px;
+  }
+
+  @media (max-width: 768px) {
+    .title {
+      padding-left: 10px;
+    }
+  }
+
+
+.left-panel {
+    width: 20%;
+    background-color: #f7f7f7;
+    min-height: 900px;
+    justify-content: center;
+    margin-top: 10px;
+    padding-top: 15px;
+}
+
+.right-panel {
+    width: 80%;
+    background-color: #f7f7f7;
+    min-height: 900px;
+    margin-left: 30px;
+    margin-top: 10px;
+    padding-left: 15px;
+}
+
+
+.ask-q {
+    display: inline-block;
+    font-family: 'Libre Franklin', sans-serif;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    background-color: #55a1ff;
+    border-radius: 4px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: 400;
+    color: white;
+    line-height: 26px;
+}
+
+#tagsButton:clicked{
+    background-color: aquamarine;
+}
+
+.tagContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center; /* This will horizontally center the content */
+}
+
+
+.inner-tag {
+    padding: 5px 10px;
+    display: inline-block;
+    background-color: grey;
+    color: white;
+    border-radius: 15px;
+    margin-right: 10px;
+}
+
+
+.ask-q:hover {
+    background-color: #006ab0;
+}
+
+.filter-button-container {
+    font-family: 'Libre Franklin', sans-serif;
+    display: flex;
+    justify-content: flex-end;
+    /* border: 10px black; */
+    background-color: black;
+  }
+
+  @font-face {
+    font-family: 'Libre Franklin';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fonts.googleapis.com/css?family=Libre+Franklin&display=swap&text=Hello%20World) format('woff2');
+    font-display: swap; /* or 'fallback' */
+  }
+  
+
+.filter-button {
+    margin-left: 0px;
+    font-family: 'Libre Franklin', sans-serif;
+    border-radius: 3px;
+    outline: 0;
+    cursor: pointer;
+    margin: 0;
+    background-color: black;
+    padding: 10px 16px;
+    color: white;
+}
+
+.filter-button:hover {
+    background-color: white;
+    color: black;
+}
+
+.right-panel1 {
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    padding-left: 30px;
+    padding-right: 50px;
+    /* padding:0; */
+}
+
+.right-panel3 {
+    color: black;
+    display: flex;
+    /* justify-content: space; */
+    padding-top: 15px;
+    padding-left: 30px;
+    padding-right: 50px;
+    /* padding:0; */
+}
+
+.right-panel2 {
+    color: blue;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 30px;
+    padding-right: 50px;
+}
+
+.sign{
+    align-items: center;
+}
+
+.left-panel-buttons{
+    
+    display: inline;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    font-family: 'Libre Franklin', sans-serif;
+    border-radius: 4px;
+    padding: 10px 16px;
+    font-size: 16px;
+    font-weight: 500;
+   
+    line-height: 26px;
+}
+
+.grey {
+    background-color: lightgrey;
+    color: blue;
+  }
+
+  .blue {
+    background-color: #55a1ff;
+    color: white;
+  }
+
+
+/* Tag Containers and Tag Box Formatting - used mainly in tags.html */
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 40px;
+    /* padding-right: 10px; */
+}
+
+.hide{
+    margin: 0;
+    padding: 0;
+}
+
+.question-container {
+    display: flex;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+    box-sizing: border-box;
+
+    /* border-bottom: black 1px ridge; */
+        
+  }
+  
+  .question-container-left {
+    width: 12%;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    float: right;
+    border-bottom: black 1px ridge;
+  
+    display: flex;
+    justify-content: center;
+  }
+  
+
+  .question-container-center {
+    width: 70%;
+    text-align: center;
+    /* background-color: lightgreen; */
+    padding: 10px;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow: auto;
+    border-bottom: black 1px ridge;
+  }
+
+  .question-container-right {
+    width: 17%;
+    /* background-color: lightcoral; */
+    padding: 10px;
+    box-sizing: border-box;
+    border-bottom: black 1px ridge;
+  }
+  
+  .tag-box {
+    min-height: 45px;
+    min-width: 240px;
+    border: 2px dashed #3498db;
+    text-align: center;
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.tag-box:hover {
+    background-color: #3498db;
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+
+h3 a {
+    color: inherit; 
+        text-decoration: inherit; 
+}
+.question input {
+    width: 75%;
+    padding: 12px;
+    margin-top: -5px;
+    margin-bottom: 15px;
+    border: none;
+    resize: vertical;
+}
+
+.q-main {
+    font-size: 18px;
+    color: blue;
+}
+
+.q-subtext {
+    font-size: 15px;
+    font-family:monospace;
+    margin-top: -20px;
+}
+
+.newquestion-container{
+    margin-top: 0;
+    padding-left: 30px;
+    padding-right: 10px;
+}
+
+.large-textbox input {
+    width: 75%;
+    padding: 12px;
+    margin-top: -5px;
+    margin-bottom: 15px;
+    border: none;
+    resize: vertical;
+    height: 200px;
+}
+
+
+.answer-container {
+    display: flex;
+    padding-left: 40px;
+    padding-right: 40px;
+    box-sizing: border-box;
+    /* border-bottom: black 1px ridge; */
+    margin-top: 5px;
+  }
+  
+  .answer-container-left {
+    width: 12%;
+    padding: 8px;
+    box-sizing: border-box;
+    text-align: center;
+    float: right;
+    /* border-bottom: black 1px ridge; */
+  
+    display: flex;
+    justify-content: center;
+  }
+  
+  .boxyContainer {
+    /* padding-left: 10px;
+    padding-right: 10px; */
+
+    /* background-color: lightgrey; */
+    box-sizing: border-box;
+    border-radius: 5px; /* Added border-radius for a boxy feel */
+    /* background-color: white; */
+    /* margin-left: 30px; */
+    /* margin-right: 30px; */
+  }
+
+  .answer-container-center {
+    width: 70%;
+    text-align: center;
+    /* background-color: lightgreen; */
+    padding: 8px;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow: auto;
+    /* border-bottom: black 1px ridge; */
+  }
+
+  .answer-container-right {
+    width: 17%;
+    /* background-color: lightcoral; */
+    padding: 8px;
+    box-sizing: border-box;
+    /* border-bottom: black 1px ridge; */
+  }
+
+  .comment-container-left,
+  .comment-container-center,
+  .comment-container-right {
+    background-color: white;
+  }
+
+  .comment-container {
+    display: flex;
+    padding-left: 40px;
+    padding-right: 40px;
+    box-sizing: border-box;
+  }
+  
+  .comment-container-left {
+    width: 7%;
+    margin-top: 20px;
+    margin-left: 170px;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    float: right;
+    border-radius: 5px;
+  }
+  
+  .comment-container-center {
+    width: 60%;
+    margin-top: 20px;
+    margin-left: 8px;
+    text-align: left;
+    padding: 10px;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow: auto;
+    border-radius: 5px;
+  }
+  
+  .comment-container-right {
+    width: 17%;
+    margin-top: 20px;
+    margin-left: 8px;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
