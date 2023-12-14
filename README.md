@@ -1,4 +1,3 @@
-```markdown
 # Fake Stack OverFlow
 
 ## Description
