@@ -64,5 +64,4 @@ This project involves HTML, CSS, and JavaScript for the front-end, while the bac
 1. Email: 'admin2@fake_so.com', Username: 'admin2', Password: 'cse316'
 2. Email: 'admin3@fake_so.com', Username: 'admin3', Password: 'cse316'
 
-Feel free to explore and test the application using the provided credentials.
-```
+Feel free to explore and test the application using the provided credentials!
