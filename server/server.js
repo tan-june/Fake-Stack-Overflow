@@ -25,7 +25,6 @@ async function deleteAllSessions() {
   }
 }
 
-// deleteAllSessions();
 
 app.use(cors(corsStuff));
 
@@ -242,7 +241,7 @@ const threeHours = 3 * 60 * 60 * 1000;
 app.post('/LoginCredentials', async (req, res) => {
   try {
     const result = await getData.loginAttempt(req.body.email, req.body.password);
-    //  //console.log(result);
+     console.log(result);
     if (result.status === 200) {
       // //console.log("Login Success")
       const session = await getData.generateSession(req.body.email);

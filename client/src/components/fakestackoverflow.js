@@ -37,8 +37,7 @@ class FakeStackOverflow extends React.Component {
   componentDidMount() {
     setTimeout(() => {
       this.userCheck();
-     }, 100);
-    
+    }, 100);
   }
 
   userCheck = () => {
@@ -46,16 +45,11 @@ class FakeStackOverflow extends React.Component {
       .get("http://localhost:8000/CheckSession", { withCredentials: true })
       .then((response) => {
         const checker = response.data;
-        //console.log(checker);
 
         if (checker.validated) {
-          this.setState({ userVerified: true }, () => {
-            //console.log(this.state.userVerified);
-          });
+          this.setState({ userVerified: true }, () => { });
         } else {
-          this.setState({ userVerified: false }, () => {
-            //console.log(this.state.userVerified);
-          });
+          this.setState({ userVerified: false }, () => { });
         }
       })
       .catch((error) => {
@@ -102,7 +96,6 @@ class FakeStackOverflow extends React.Component {
   };
 
   displayUserAnswers = (user_id) => {
-    //console.log(user_id);
     this.setState({
       usertoDisplayAdmin: user_id,
       activeComponent: "userAnswers",
@@ -117,7 +110,6 @@ class FakeStackOverflow extends React.Component {
   };
 
   displayUser = () => {
-    // //console.log("hello");
     this.setState({
       activeComponent: "userDisplay",
     });
@@ -128,7 +120,7 @@ class FakeStackOverflow extends React.Component {
       activeComponent: "userAnswerToQ",
       qidforDisplay: qid,
     });
-  };  
+  };
 
   newLoader = () => {
     this.setState({
@@ -143,13 +135,12 @@ class FakeStackOverflow extends React.Component {
     });
   };
 
-  modifyA = (qid) =>{
+  modifyA = (qid) => {
     this.setState({
-      activeComponent:"modifyAnswers",
+      activeComponent: "modifyAnswers",
       qidforDisplay: qid,
     });
   }
-
 
   initiateLogout = async () => {
     try {
@@ -212,14 +203,12 @@ class FakeStackOverflow extends React.Component {
   render() {
     const componentMap = {
       newLoad: <NewLoad defaultLoad={this.defaultLoad} />,
-      
       displayTag: (
         <DisplayTags
           handleTagSpecificDisplay={this.handleTagSpecificDisplay}
           newQ={this.newQuestion}
         />
       ),
-      
       displayQofTag: (
         <DisplayQofTag
           tidSearch={this.state.tidSearch}
@@ -227,18 +216,15 @@ class FakeStackOverflow extends React.Component {
           newQ={this.newQuestion}
         />
       ),
-      
       newQuestion: (
         <NewQuestion
           defaultLoad={this.defaultLoad}
           qid={this.state.qidforDisplay}
         />
       ),
-      
       defaultPage: (
         <DefaultPage displayA={this.displayAnswer} newQ={this.newQuestion} />
       ),
-      
       displayAnswer: (
         <DisplayAnswer
           displayA={this.displayAnswer}
@@ -247,8 +233,7 @@ class FakeStackOverflow extends React.Component {
           qid={this.state.qidforDisplay}
           answerQuestion={this.answerQuestion}
         />
-      ), 
-      
+      ),
       newAnswer: (
         <NewAnswer
           defaultLoad={this.defaultLoad}
@@ -256,7 +241,6 @@ class FakeStackOverflow extends React.Component {
           displayA={this.displayAnswer}
         />
       ),
-      
       userDisplay: (
         <UserDisplay
           modifyQ={this.modifyQ}
@@ -267,7 +251,6 @@ class FakeStackOverflow extends React.Component {
           keySwitch={null}
         />
       ),
-
       userAnswers: (
         <UserAnswers
           displayA={this.displayAnswer}
@@ -275,38 +258,33 @@ class FakeStackOverflow extends React.Component {
           DisplayUserA={this.displayUserAnswer}
         />
       ),
-
       modifyQuestions: (
         <ModifyQuestions
           modifyQ={this.modifyQ}
           questionId={this.state.qidforDisplay}
           userInfoDisplayer={this.displayUser}
-          backtoUser = {this.displayUser}
+          backtoUser={this.displayUser}
         />
       ),
-
       adminUserKeyer: (
         <UserDisplay
-        modifyQ={this.modifyQ}
-        userInfoDisplayer={this.displayUser}
-        showUserAnswers={this.displayUserAnswers}
-        showUserTags={this.displayUserTags}
-        backtoUser = {this.displayUser}
-        keySwitch ={"AdminView"}
-        usertoShow={this.state.usertoDisplay}
+          modifyQ={this.modifyQ}
+          userInfoDisplayer={this.displayUser}
+          showUserAnswers={this.displayUserAnswers}
+          showUserTags={this.displayUserTags}
+          backtoUser={this.displayUser}
+          keySwitch={"AdminView"}
+          usertoShow={this.state.usertoDisplay}
         />
       ),
-
       modifyAnswers: (
-        <ModifyAnswers 
-        modifyA={this.modifyA}
-        questionId={this.state.qidforDisplay}
-        DisplayUserA={this.DisplayUserA}
-        backtoUser = {this.displayUser}
+        <ModifyAnswers
+          modifyA={this.modifyA}
+          questionId={this.state.qidforDisplay}
+          DisplayUserA={this.DisplayUserA}
+          backtoUser={this.displayUser}
         />
       ),
-      
-      
       userAnswerToQ: (
         <DisplayUserAnswer
           DisplayUserA={this.DisplayUserA}
@@ -314,20 +292,15 @@ class FakeStackOverflow extends React.Component {
           qid={this.state.qidforDisplay}
           answerQuestion={this.answerQuestion}
           modifyA={this.modifyA}
-          
         />
       ),
-
-      adminViewofUser: <AdminViewofUser 
-      handleUsernameClick={this.handleUsernameClick}
+      adminViewofUser: <AdminViewofUser
+        handleUsernameClick={this.handleUsernameClick}
       />,
-
-      userTags: <UserTags 
-      userID={this.state.usertoDisplayAdmin}
-      displayUserTags={this.displayUserTags}
-       />,
-
-      
+      userTags: <UserTags
+        userID={this.state.usertoDisplayAdmin}
+        displayUserTags={this.displayUserTags}
+      />,
       search: (
         <Search
           displayA={this.displayAnswer}
@@ -345,8 +318,6 @@ class FakeStackOverflow extends React.Component {
     let content =
       componentMap[this.state.activeComponent] || componentMap["newLoad"];
 
-      //console.log(content);
-      
     if (this.state.activeComponent === "newLoad") {
       return <div>{content}</div>;
     } else {
@@ -363,7 +334,6 @@ class FakeStackOverflow extends React.Component {
                 </a>
               </div>
               <div className="spacer"></div>
-
               <div className="search-bar" style={{ marginRight: "10px" }}>
                 <input
                   type="text"
@@ -373,7 +343,6 @@ class FakeStackOverflow extends React.Component {
                   onKeyDown={this.handleKeyPress}
                 />
               </div>
-
               <div className="user-actions">
                 <a href="#/" onClick={this.defaultLoad}>
                   <img
@@ -382,7 +351,6 @@ class FakeStackOverflow extends React.Component {
                     src={homeButton}
                   />
                 </a>
-                
                 <a href="#/" onClick={this.displayUser}>
                   <img
                     alt="Manage Account"
@@ -390,7 +358,6 @@ class FakeStackOverflow extends React.Component {
                     src={userImage}
                   />
                 </a>
-
                 <a href="#/" onClick={this.initiateLogout}>
                   <img
                     alt="Manage Account"
@@ -400,17 +367,12 @@ class FakeStackOverflow extends React.Component {
                 </a>
               </div>
             </div>
-
             <div id="main" className="main">
               <div className="left-panel">
                 <center>
                   <div>
                     <button
-                      className="left-panel-buttons grey"
-                      onClick={() => {
-                        this.defaultLoad();
-                        this.colorChange("homePage");
-                      }}
+                      className="left-panel-buttons grey" onClick={() => { this.defaultLoad(); this.colorChange("homePage"); }}
                       id="homePage"
                     >
                       Questions
@@ -432,7 +394,7 @@ class FakeStackOverflow extends React.Component {
               </div>
               <div className="right-panel" id="top-panel">
                 {content}
-                <br /><br /><br /><br /><br /><br />
+                <br /><br /><br /><br />
               </div>
             </div>
           </div>

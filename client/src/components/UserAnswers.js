@@ -18,7 +18,6 @@ class UserAnswers extends Component {
     this.setState({userVerified: false});
   }
 
-
   userCheck = () => {
     axios
       .get('http://localhost:8000/CheckSession', { withCredentials: true })
@@ -27,11 +26,11 @@ class UserAnswers extends Component {
   
         if (checker.validated) {
           this.setState({ userVerified: true, usertype: response.data.user.usertype}, () => {
-            ////console.log(this.state.userVerified);
+           
           });
         } else {
           this.setState({ userVerified: false }, () => {
-            ////console.log(this.state.userVerified);
+           
           });
         }
       })
@@ -48,22 +47,15 @@ class UserAnswers extends Component {
   }
 
   fetchUserAnswers = () => {
-    //////console.log(this.props.userID);
-
     const requestBody = {
         id: this.props.userID,
     };
-
     axios.post('http://localhost:8000/getAnsweredQuestionsByUser', requestBody, { withCredentials: true })
       .then((response) => {
-        ////console.log('Response:', response);
-
         if (response.data) {
-          console.log("data log", response.data);
           this.setState({ userAnswers: response.data.reverse() }, () => {
             this.updateQuestionDetails();
-        });
-        
+        });        
         } else {
           console.error('Invalid response format. Expected an array.');
         }
@@ -72,7 +64,6 @@ class UserAnswers extends Component {
         console.error('Error retrieving user answers:', error);
       });
 };
-
 
   updateQuestionDetails = () => {
     const startIndex = (this.state.currentPage - 1) * this.state.questionsPerPage;
@@ -88,6 +79,7 @@ class UserAnswers extends Component {
       console.error('DisplayUserA is not a function');
     }
   }
+
   handleNextPage = () => {
     this.setState(
       (prevState) => ({ currentPage: prevState.currentPage + 1 }),
@@ -103,7 +95,6 @@ class UserAnswers extends Component {
   };
 
   render() {
-    // console.log(this.state.userAnswers);
     const totalPages = Math.ceil(this.state.userAnswers.length / this.state.questionsPerPage);
     const isPrevDisabled = this.state.currentPage === 1;
     const isNextDisabled = this.state.currentPage === totalPages;
@@ -120,40 +111,22 @@ class UserAnswers extends Component {
           <center>
 If you don't see any questions below, you have not answered any questions.          </center>
           </h3>
-        {/* Render the questions using createQuestionElement */}
         <div className="questionDetails" id="questionDetails">
         </div>
-
-        {/* Pagination controls */}
         <div>
           <center>
             <br />
             <br />
             <button
-              style={{
-                fontFamily: 'Libre Franklin',
-                backgroundColor: '#55a1ff',
-                color: 'white',
-                padding: '10px',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-              }}
+           className="paginationButtons"
               onClick={this.handlePrevPage}
               disabled={isPrevDisabled}
             >
               Previous
             </button>
             <button
-              style={{
-                marginLeft: '10px',
-                backgroundColor: '#55a1ff',
-                color: 'white',
-                padding: '10px',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-              }}
+                className="paginationButtons"
+                
               onClick={this.handleNextPage}
               disabled={isNextDisabled}
             >

@@ -498,3 +498,100 @@ h3 a {
   cursor: pointer;
   opacity: 0.9;
 }
+
+.useruserBox {
+  background-color: white;
+  padding: 20px;
+  margin: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.userDetail {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.userDetail h1 {
+  font-size: 20px;
+  margin: 0;
+  font-weight: bold;
+  margin-right: 5px;
+}
+.userTable {
+  border-collapse: collapse;
+  width: 100%;
+}
+.paginationButtons {
+  margin-left: 10px;
+  background-color: #55a1ff;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.commentForm {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 30%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-25%, -50%);
+  padding: 20px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+.commentSubmitButton {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 5px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  opacity: 0.9;
+}
+
+.commentCancelButton {
+  background-color: #f44336;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 5px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  opacity: 0.9;
+}
+
+.addCommentButton {
+  padding: 10px 10px;
+  font-size: 14px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.commentAreaBox {
+  width: 378px;
+  padding: 20px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+  font-family: Calibri;
+  height: 120px;
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}

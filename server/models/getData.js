@@ -397,10 +397,12 @@ async function newRegister(username, email, password) {
 
 async function loginAttempt(email, password) {
     try {
+        // console.log(email);
+        // console.log(awaUser.find())
         const user = await User.findOne({ email: email });
 
         if (!user) {
-            ////console.log("User not found");
+            console.log("User not found");
             return { status: 400, user: null };
         }
         const matches = await bcrypt.compare(password, user.password);
