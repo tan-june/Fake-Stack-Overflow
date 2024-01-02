@@ -440,3 +440,61 @@ h3 a {
     align-items: center;
   }
   
+
+
+/* New Load Page Form Container Code */
+.form-container {
+  margin-top: 15px;
+}
+
+.registration-form {
+  width: 50%;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
+}
+
+.registration-form h1 {
+  text-align: center;
+}
+
+.input-field {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+.error-box {
+  width: block;
+  background: yellow;
+  font-size: 20px;
+  color: red;
+}
+
+.button-container {
+  text-align: center;
+}
+
+.cancel-button {
+  background-color: #f44336;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.sign-up-button {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+}

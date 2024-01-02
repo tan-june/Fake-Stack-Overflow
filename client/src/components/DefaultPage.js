@@ -77,10 +77,7 @@ class DefaultPage extends React.Component {
     const currentQuestions = this.state.questionsArray.slice(startIndex, endIndex);
     createQuestionElement(currentQuestions, this.buttonClicked);
   }
-  
-
-
-  
+   
 
 handleNextPage = () => {
   const totalPages = Math.ceil(this.state.questionCount / this.state.questionsPerPage);
