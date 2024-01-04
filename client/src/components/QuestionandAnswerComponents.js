@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const createQuestionElement = (questions, buttonClick) => {
   const questionDetailsContainer = document.getElementById('questionDetails');
   questionDetailsContainer.innerHTML = '';
@@ -52,3 +54,64 @@ export const createQuestionElement = (questions, buttonClick) => {
       });
   });
 };
+ 
+  export const newestLoad = async () => {
+    return axios
+      .get('http://localhost:8000/getAllQuestionsAndCount')
+      .then((res) => {
+        const reversedQuestions = res.data.questions.reverse();
+        return {
+          questionCount: res.data.questionCount,
+          questionsArray: reversedQuestions,
+          currentPage: 1,
+        };
+      })
+      .catch((error) => {
+        console.error('Error retrieving questions and question count:', error);
+      });
+  };
+  
+  export const activeMode = async () => {
+    return axios
+      .get('http://localhost:8000/getActiveQuestionsAndCount')
+      .then((res) => {
+        const reversedQuestions = res.data.questions;
+        return {
+          questionCount: reversedQuestions.length,
+          questionsArray: reversedQuestions,
+          currentPage: 1,
+        };
+      })
+      .catch((error) => {
+        console.error('Error retrieving questions and question count:', error);
+      });
+  };
+  
+  export const getUnanswered = async () => {
+    return axios
+      .get('http://localhost:8000/getUnansweredQuestionsAndCount')
+      .then((res) => {
+        const reversedQuestions = res.data.questions.reverse();
+        return {
+          questionCount: reversedQuestions.length,
+          questionsArray: reversedQuestions,
+          currentPage: 1,
+        };
+      })
+      .catch((error) => {
+        console.error('Error retrieving questions and question count:', error);
+      });
+  };
+
+  export const checkUser = async () => {
+    return axios
+      .get("http://localhost:8000/CheckSession", { withCredentials: true })
+      .then((response) => {
+        return response.data.validated;
+      })
+      .catch((error) => {
+        console.error("Error checking user session:", error);
+        return false;
+      });
+  };
+  

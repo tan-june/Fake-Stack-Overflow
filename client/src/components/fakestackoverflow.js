@@ -41,21 +41,15 @@ class FakeStackOverflow extends React.Component {
   }
 
   userCheck = () => {
-    axios
-      .get("http://localhost:8000/CheckSession", { withCredentials: true })
+    axios.get("http://localhost:8000/CheckSession", { withCredentials: true })
       .then((response) => {
-        const checker = response.data;
-
-        if (checker.validated) {
-          this.setState({ userVerified: true }, () => { });
-        } else {
-          this.setState({ userVerified: false }, () => { });
-        }
+        this.setState({ userVerified: response.data.validated });
       })
       .catch((error) => {
         console.error("Error", error);
       });
   };
+  
 
   setShowTags = () => {
     this.setState({

@@ -3,6 +3,7 @@ import axios from "axios";
 import downvote from "../images/downvote.png";
 import upvote from "../images/upvote.png";
 import BadRender from "./BadRender.js"
+import {checkUser} from './QuestionandAnswerComponents.js'
 
 class DisplayAnswer extends Component {
   constructor(props) {
@@ -22,18 +23,13 @@ class DisplayAnswer extends Component {
     };
   }
 
-  userCheck = () => {
-    axios
-      .get("http://localhost:8000/CheckSession", { withCredentials: true })
-      .then((response) => {
-        const checker = response.data;
-        if (checker.validated) {
-          this.setState({ userVerified: true });
-        } else {
-          this.setState({ userVerified: false });
-        }
-      })
-      .catch((error) => { });
+  userCheck = async () => {
+    try {
+      const validated = await checkUser();
+      this.setState({ userVerified: validated });
+    } catch (error) {
+      console.error("Error checking user:", error);
+    }
   };
 
   commentForm = (answerID) => {

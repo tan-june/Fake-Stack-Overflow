@@ -1,6 +1,11 @@
 import React from "react";
-import { createQuestionElement } from './QuestionandAnswerComponents';
 import axios from "axios";
+import {
+  createQuestionElement,
+  newestLoad,
+  activeMode,
+  getUnanswered
+} from './QuestionandAnswerComponents';
 
 class Search extends React.Component {
   constructor(props) {
@@ -10,43 +15,11 @@ class Search extends React.Component {
       questionCount: 0,
       currentPage: 1,
       questionsPerPage: 5,
-      userVerified: false,
-      
     };
   }
 
-  userCheck = () => {
-    
-    axios
-      .get('http://localhost:8000/CheckSession', { withCredentials: true })
-      .then((response) => {
-        const checker = response.data;
-        //console.log(checker);
-  
-        if (checker.validated) {
-          this.setState({ userVerified: true }, () => {
-            //console.log(this.state.userVerified);
-          });
-        } else {
-          this.setState({ userVerified: false }, () => {
-            //console.log(this.state.userVerified);
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
-  };
-
-
   componentDidMount() {
-    this.userCheck();
-    this._isMounted = true;
     this.performSearch();
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   handleKeyPress = (event) => {
@@ -82,94 +55,66 @@ class Search extends React.Component {
     createQuestionElement(currentQuestions, this.buttonClicked);
   }
 
-  newestLoad = () => {
-    setTimeout(() => {
-      axios.get("http://localhost:8000/getAllQuestionsAndCount")
-        .then((res) => {
-          const reversedQuestions = res.data.questions.reverse();
-          this.setState({
-            questionCount: res.data.questionCount,
-            searchResults: reversedQuestions,
-          }, () => {
-            this.updateQuestionDetails();
-            this.forceUpdate();
-          });
-        })
-        .catch((error) => {
-          console.error('Error retrieving questions and question count:', error);
-        });
-    }, 100);    
+  newestLoad = async () => {
+    const response = await newestLoad();
+    this.setState({
+      questionCount: response.questionCount,
+      searchResults: response.questionsArray,
+      currentPage: 1,
+    });
+    this.updateQuestionDetails();
   }
 
-  activeMode = () => {
-    setTimeout(() => {
-    axios.get("http://localhost:8000/getActiveQuestionsAndCount")
-      .then((res) => {
-        const reversedQuestions = res.data.questions.reverse();
-        this.setState({
-          questionCount: reversedQuestions.length,
-          searchResults: reversedQuestions,
-        }, () => {
-          this.updateQuestionDetails();
-        });
-      })
-      .catch((error) => {
-        console.error('Error retrieving questions and question count:', error);
-      });
-    }, 100);    
+  activeMode = async () => {
+    const response = await activeMode();
+    this.setState({
+      questionCount: response.questionCount,
+      searchResults: response.questionsArray,
+      currentPage: 1,
+    });
+    this.updateQuestionDetails();
   }
 
-  getUnanswered = () => {
-    setTimeout(() => {
-      axios.get("http://localhost:8000/getUnansweredQuestionsAndCount")
-      .then((res) => {
-        const reversedQuestions = res.data.questions.reverse();
-        this.setState({
-          questionCount: reversedQuestions.length,
-          searchResults: reversedQuestions,
-        }, () => {
-          this.updateQuestionDetails();
-        });
-      })
-      .catch((error) => {
-        console.error('Error retrieving questions and question count:', error);
-      });
-    }, 100);    
+  getUnanswered = async () => {
+    const response = await getUnanswered();
+    this.setState({
+      questionCount: response.questionCount,
+      searchResults: response.questionsArray,
+      currentPage: 1,
+    });
+    this.updateQuestionDetails();
   }
 
   performSearch() {
     const { searchQuery } = this.props;
 
     if (!searchQuery || searchQuery.trim() === '') {
-      //console.log('Empty search query');
       this.setState({ searchResults: [], questionCount: 0 });
       return;
     }
 
-    setTimeout(() => {    
-    axios.get(`http://localhost:8000/search?q=${encodeURIComponent(searchQuery)}`)
-      .then(res => {
-        //console.log('Search Results from Server:', res.data);
-        this.setState({
-          questionCount: res.data.questionCount,
-          searchResults: res.data.searchResults.reverse(),
-          currentPage: 1, 
-        }, () => {
-          this.updateQuestionDetails();
+    setTimeout(() => {
+      axios.get(`http://localhost:8000/search?q=${encodeURIComponent(searchQuery)}`)
+        .then(res => {
+          this.setState({
+            questionCount: res.data.questionCount,
+            searchResults: res.data.searchResults.reverse(),
+            currentPage: 1,
+          }, () => {
+            this.updateQuestionDetails();
+          });
+          if (this.state.questionCount === 0) {
+            const questionDetailsContainer = document.getElementById('questionDetails');
+            questionDetailsContainer.innerHTML = `<h1> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No Search Results Found!</h1>`;
+          }
+        })
+        .catch(error => {
+          console.error('Error performing search:', error);
         });
-        if (this.state.questionCount === 0) {
-          const questionDetailsContainer = document.getElementById('questionDetails');
-          questionDetailsContainer.innerHTML = `<h1> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No Search Results Found!</h1>`;
-        }
-      })
-      .catch(error => {
-        console.error('Error performing search:', error);
-      });
-    }, 100);    
+    }, 100);
   }
 
   buttonClicked = (qid) => {
-    //console.log('Question clicked:', qid);
     this.props.displayA(qid);
   }
 
@@ -182,11 +127,13 @@ class Search extends React.Component {
       <div>
         <div className="right-panel1">
           <h1>Search Results</h1>
-          {this.state.userVerified && (<button className="ask-q" onClick={() => this.props.newQ()}>
-            New Question
-          </button>)}
+          {this.state.userVerified && (
+            <button className="ask-q" onClick={() => this.props.newQ()}>
+              New Question
+            </button>
+          )}
         </div>
-      
+
         <div className="right-panel2">
           <h1>{this.state.questionCount} Question(s)</h1>
           <div className="filter-button-container">
@@ -211,12 +158,12 @@ class Search extends React.Component {
 
         <div>
           <center>
-            <br/>
-            <br/>
-            <button style={{ fontFamily: 'Libre Franklin', backgroundColor: '#55a1ff', color: 'white', padding: '10px', border: 'none', borderRadius: '5px', cursor: 'pointer' }} onClick={this.handlePrevPage} disabled={isPrevDisabled}>
+            <br />
+            <br />
+            <button className="paginationButtons" onClick={this.handlePrevPage} disabled={isPrevDisabled}>
               Previous
             </button>
-            <button style={{ marginLeft: '10px', backgroundColor: '#55a1ff', color: 'whit e', padding: '10px', border: 'none', borderRadius: '5px', cursor: 'pointer' }} onClick={this.handleNextPage} disabled={isNextDisabled}>
+            <button className="paginationButtons" onClick={this.handleNextPage} disabled={isNextDisabled}>
               Next
             </button>
           </center>

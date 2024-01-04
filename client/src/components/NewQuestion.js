@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import sadface from '../images/sad.png'
+import { checkUser } from './QuestionandAnswerComponents';
 
 
 class NewQuestion extends React.Component {
@@ -12,52 +13,24 @@ class NewQuestion extends React.Component {
       questionTags: '',
       qSummary: '',
       userVerified: false,
-      isServerNull: false,
     };
   }
 
-  componentDidMount(){
-          
+  componentDidMount(){          
     setTimeout(() => {
-      this.serverCheck();
       this.userCheck();
     }, 100);  
 
     }
 
-    serverCheck = () => {
-      axios
-        .get('http://localhost:8000/show')
-        .then((response) => {
-          this.setState({ isServerNull: true });
-        })
-        .catch((error) => {
-          this.setState({ isServerNull: false });
-        });
+    userCheck = async () => {
+      try {
+        const validated = await checkUser();
+        this.setState({ userVerified: validated });
+      } catch (error) {
+        console.error("Error checking user:", error);
+      }
     };
-  
-
-    userCheck = () => {
-        axios
-          .get('http://localhost:8000/CheckSession', { withCredentials: true })
-          .then((response) => {
-            const checker = response.data;
-            //console.log(checker);
-      
-            if (checker.validated) {
-              this.setState({ userVerified: true }, () => {
-                //console.log(this.state.userVerified);
-              });
-            } else {
-              this.setState({ userVerified: false }, () => {
-                //console.log(this.state.userVerified);
-              });
-            }
-          })
-          .catch((error) => {
-            console.error("Error", error);
-          });
-      };
 
   postQuestionReCheck = () => {
     if (this.checkInput()) {
@@ -137,11 +110,9 @@ class NewQuestion extends React.Component {
   };
 
   render() {
-    let content;
-
     
     if(this.state.userVerified){
-      content = (
+      return (
         <div>
        <div style={{ margin: '5% auto', width: '60%', backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', padding: '20px' }}>
   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -256,30 +227,9 @@ class NewQuestion extends React.Component {
 
 </div>
   )   
-
   }
-  else if(!this.state.isServerNull){
-      return (
-        <div>
-
-          <center>
-            <div style={{ textAlign: 'center', marginTop: '50px' }}>
-              <img src={sadface} alt="Sad Face" width="100" />
-              <h1>Server Error! :(</h1>
-              <h3>Please refresh the page!</h3>
-
-              <a className="left-panel-buttons blue"
-                style={{ marginRight: '10px' }}
-                href="/" onClick={() => window.location.href = '/'}> Refresh </a>
-            </div>
-          </center>
-        </div>
-
-      )
-    }
-  
   else{
-      content = (
+    return (
           <div>
           
           <center>
@@ -296,12 +246,6 @@ class NewQuestion extends React.Component {
           </div>
           );
   }
-
-  return(
-    <div>
-      {content}
-    </div>
-  );
 
 
 }
