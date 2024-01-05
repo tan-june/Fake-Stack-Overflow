@@ -3,9 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const getData = require('./models/getData')
 const cookieParser = require('cookie-parser');
-const jwt = require('jsonwebtoken');
 const app = express();
-const bcrypt = require('bcrypt');
 app.use(express.json());
 
 const corsStuff = {
@@ -19,25 +17,20 @@ async function deleteAllSessions() {
     for (const user of users) {
       await getData.deleteSessiononUser(user._id);
     }
-    // //console.log('All user sessions updated.');
   } catch (error) {
-    // console.error('Error updating user sessions:', error);
   }
 }
 
-
 app.use(cors(corsStuff));
-
 app.use(cookieParser());
-
 const server = app.listen(8000, () => {
-  //console.log(`Server is running on http://localhost:${8000}`);
+  console.log(`Server is running on http://localhost:${8000}`);
 });
 
 mongoose
   .connect('mongodb://127.0.0.1:27017/fake_so', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    //console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB');
   })
   .catch((err) => {
     console.error('MongoDB connection error: ', err);
@@ -45,31 +38,13 @@ mongoose
 
 process.on('SIGINT', () => {
   mongoose.connection.close();
-  //console.log('Server closed. Database instance disconnected.');
+  console.log('Server closed. Database instance disconnected.');
   process.exit(0);
 });
 
 module.exports = server;
+
 //--------------------------------------------HTTP REQUESTS---------------------------------------------------------------
-
-app.get('/', (req, res) => {
-  res.send('Hi, there');
-});
-
-//Test Alert
-app.get('/show', (req, res) => {
-  res.cookie('test_cookie', 'should be null cookie');
-  const response = `
-      <html>
-        <body>
-          <h1>HELLO</h1>
-        </body>
-      </html>
-    `;
-
-  res.json(response);
-});
-
 app.get('/getAllQuestions', async (req, res) => {
   try {
     const questions = await getData.getAllQuestions();
@@ -147,8 +122,6 @@ app.post('/postQuestion', async (req, res) => {
   try {
     const user = await getData.findSession(req.cookies.fake_so_securesessionval);
     const tagQueried = await getData.newQuestionTagCheck(req.body.tags, user.userrep);
-    // //console.log('Session ID from cookies:', req.cookies.fake_so_securesessionval);
-
     await getData.createQuestion(req.body.title, req.body.summary, req.body.text, tagQueried, req.cookies.fake_so_securesessionval, req.cookies.values_88242);
     res.send("Success");
   } catch (error) {
@@ -216,18 +189,10 @@ app.get('/search', async (req, res) => {
 
 app.post('/newRegister', async (req, res) => {
   try {
-    // //console.log("here");
-    // //console.log(req.body.email);
-    // //console.log(req.body.username);
-    // //console.log(req.body.password);
-
     const result = await getData.newRegister(req.body.username, req.body.email, req.body.password);
-    // //console.log("result print", result);
     if (result.status === 200) {
-      // //console.log("User registered successfully!");
       res.send({ validityCheck: 200 });
     } else if (result.status === 400) {
-      // //console.log("i am here!! Error!");
       res.send({ validityCheck: 400 });
     }
   } catch (error) {
@@ -236,21 +201,16 @@ app.post('/newRegister', async (req, res) => {
   }
 });
 
-const threeHours = 3 * 60 * 60 * 1000;
-
 app.post('/LoginCredentials', async (req, res) => {
   try {
     const result = await getData.loginAttempt(req.body.email, req.body.password);
      console.log(result);
     if (result.status === 200) {
-      // //console.log("Login Success")
       const session = await getData.generateSession(req.body.email);
-      // //console.log(session);
-      // //console.log("Server Generated", generatedSessionId);
       res.cookie('fake_so_securesessionval', session.sessionHash, {
         httpOnly: true,
         secure: true,
-        maxAge: threeHours,
+        maxAge: 10800000,
     });
     
     res.cookie('values_88242', session.userHashed, {
@@ -363,8 +323,6 @@ app.post('/QuestionDownvote', async (req, res) => {
 app.post('/CommmentUpvote', async (req, res) => {
   try {
     const userData = await getData.findSession(req.cookies.fake_so_securesessionval);
-    // //console.log(req.body.answerID);
-    // //console.log(req.body.passValue);
     let response;
     if(userData){
       if(req.body.passValue === 0){
@@ -394,7 +352,6 @@ app.post('/AddCommentToAnswer', async (req, res) => {
 });
 app.post('/AddCommentToQuestion', async (req, res) => {
   try {
-    // //console.log(req.body.id);
     const user = await getData.findSession(req.cookies.fake_so_securesessionval);
     if(user.userrep >= 50){
       await getData.addCommentToQuestion(req.body.id, req.body.comment, user.username);
@@ -436,7 +393,6 @@ app.get('/CheckSession', async(req, res) => {
 
 app.post('/LogoutProcess', async (req, res) => {
   try {
-    //console.log("Log out!");
     if(req.cookies.fake_so_securesessionval !== "undefined"){
         const user = await getData.findSession(req.cookies.fake_so_securesessionval);
         await getData.deleteSessiononUser(user);
@@ -471,11 +427,8 @@ app.get('/questionsByUser/:username', async (req, res) => {
 
 app.post('/getAnsweredQuestionsByUser', async (req, res) => {
   try {
-    //console.log(req.body.id);    
     const userCheck1 = await getData.findSession(req.cookies.fake_so_securesessionval);
     const userCheck2 = await getData.findUserForAdmin(req.body.id);
-    //console.log("heree")
-
       if ((userCheck1.id === userCheck2.id) || userCheck1.usertype === "Adminstrator") {
       const username = userCheck2.username;
 
@@ -497,8 +450,6 @@ app.post('/getAnsweredQuestionsByUser', async (req, res) => {
 app.get('/getTagsByUser', async (req, res) => {
   try {
     const userData = await getData.findSession(req.cookies.fake_so_securesessionval);
-    //console.log(userData);
-
     if (userData) {
 
       if ((userData.usertype === "Adminstrator") || (userData.id === req.query.id)) {
@@ -526,8 +477,7 @@ app.delete('/deleteQuestion/:questionId', async (req, res) => {
     
     if(userData){
       const questionId = req.params.questionId;
-
-    const result = await getData.deleteQuestion(questionId);
+      const result = await getData.deleteQuestion(questionId);
     res.send(result);
     }
     else{
@@ -582,21 +532,16 @@ app.get('/getAllUsers', async (req, res) => {
 app.get('/getCurrentUserData', async (req, res) => {
   try {
       const sessionID = req.cookies.fake_so_securesessionval;
-
-      // Use the findSession function to get the user based on the session ID
       const currentUser = await getData.findSession(sessionID);
 
       if (!currentUser) {
-          // If no user is found, return an error
           return res.status(401).json({ error: 'Unauthorized' });
       }
 
-      // Customize the data you want to return based on your requirements
       const userData = {
           username: currentUser.username,
           email: currentUser.email,
           usertype: currentUser.usertype,
-          // Add other properties as needed
       };
 
       res.json(userData);
@@ -610,9 +555,6 @@ app.get('/getAnswerTextById/:answerId', async (req, res) => {
   try {
     const answerId = req.params.answerId;
     const answerText = await getData.getAnswerTextById(answerId);
-
-    //console.log('Answer Text:', answerText);
-
     if (answerText) {
       res.json({ answerText });
     } else {
@@ -624,14 +566,10 @@ app.get('/getAnswerTextById/:answerId', async (req, res) => {
   }
 });
 
-
 //---------------------------------------
 app.post('/updateAnswer', async (req, res) => {
   try {
-    //console.log(req.body.answerID);
-    //console.log(req.body.text);
     const result = await getData.updateAnswer(req.body.answerID, req.body.text);
-    //console.log("updated");
     res.send(result);
 
   } catch (error) {
@@ -643,8 +581,6 @@ app.post('/updateAnswer', async (req, res) => {
 //---------------------------------------
 app.post('/deleteAnswer', async (req, res) => {
   try {
-    //console.log("answerID:", req.body.answerID); 
-
     const result = await getData.deleteAnswer(req.body.answerID);
     res.send(result);
   } catch (error) {
@@ -656,12 +592,8 @@ app.post('/deleteAnswer', async (req, res) => {
 //---------------------------------------------Delete User---------------------------------------------
 app.delete('/deleteUser/:userId', async (req, res) => {
   try {
-    //console.log("In the zone");
     const sessionID = req.cookies.fake_so_securesessionval;
     const currentUser = await getData.findSession(sessionID)
-    //console.log('Current User ID:', currentUser._id.toString());
-  //console.log('Requested User ID:', req.params.userId);
-
 
     if ((currentUser && currentUser.usertype === 'Adminstrator') && (currentUser._id.toString() !== req.params.userId)) {
       const result = await getData.deleteUser(req.params.userId, currentUser);

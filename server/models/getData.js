@@ -723,8 +723,7 @@ async function getAnsweredQuestionsByUser(username) {
 
 async function getTagsByUser(username) {
     try {
-        //console.log('Inside getTagsByUser');
-     
+    
         const userQuestions = await Question.find({ asked_by: username }).populate('tags');
 
         const tagCounts = {};
@@ -742,7 +741,6 @@ async function getTagsByUser(username) {
 
         const userTags = Object.values(tagCounts);
 
-        //console.log('User Tags:', userTags);
         return userTags;
     } catch (error) {
         throw error;
@@ -753,8 +751,6 @@ async function onlyUserWithTag(username, tagId) {
     try {
         const questionsWithThisTag = await Question.find({ tags: tagId });
         const uniqueUsersWithThisTag = new Set(questionsWithThisTag.map(question => question.asked_by));
-
-        // Exclude the current user from the check
         uniqueUsersWithThisTag.delete(username);
 
         return uniqueUsersWithThisTag.size === 0;
@@ -802,15 +798,9 @@ async function updateUserTags(tagId, newName, currentUser) {
                 console.error(`Tag with ID ${tagId} not found`);
                 return { success: false, message: 'Tag not found' };
             }
-
-            //console.log('Found tag:', tagToUpdate);
-
             tagToUpdate.name = newName;
 
             const updatedTag = await tagToUpdate.save();
-
-            //console.log('Tag name updated successfully:', updatedTag);
-
             return { success: true, message: 'Tag name updated successfully', updatedTag };
         } else {
             throw new Error('User is not the only one using this tag');
@@ -849,8 +839,6 @@ async function deleteAnswer(answerId) {
             { answers: answerId },
             { $pull: { answers: answerId } }
         );
-
-        // //console.log("Deleted Answer:", deletedAnswer);
         return deletedAnswer;
     } catch (error) {
         throw error;
@@ -863,7 +851,6 @@ async function getAnswerTextById(answerId) {
         if (!answer) {
             return null; // Or throw an error if you prefer
         }
-        //console.log('Answer text from getData:', answer.text);
         return answer.text;
     } catch (error) {
         throw error;
@@ -872,7 +859,6 @@ async function getAnswerTextById(answerId) {
 
 const deleteUser = async (userId) => {
     try {
-        //console.log(userId);
       const user = await User.findById(userId);
       const usernameToDelete = user.username;
   
@@ -891,7 +877,6 @@ const deleteUser = async (userId) => {
 async function findUserForAdmin(id) {
     try {
       const user = await User.findById(id);
-    //   //console.log('Found user:', user);
       return user;
     } catch (error) {
       console.error('Error finding user:', error);
@@ -906,30 +891,12 @@ async function deleteUnusedTags() {
         const tagUsageCount = await Question.countDocuments({ tags: tag._id });
         if (tagUsageCount === 0) {
           await Tag.findByIdAndDelete(tag._id);
-        //   //console.log(`Tag "${tag.name}" deleted.`);
         }
       }  
-    //   //console.log('Unused tags deletion completed.');
     } catch (error) {
       console.error('Error deleting unused tags:', error);
     }
   }
-
-//   async function deleteUnusedAnswer() {
-//     try {
-//       const allAnswers = await Answer.find({});
-//       for (const answer of allAnswers) {
-//         const tagUsageCount = await Question.countDocuments({ answers: answer._id });
-//         if (tagUsageCount === 0) {
-//           await Answer.findByIdAndDelete(tag._id);
-//         //   //console.log(`Tag "${tag.name}" deleted.`);
-//         }
-//       }  
-//     //   //console.log('Unused tags deletion completed.');
-//     } catch (error) {
-//       console.error('Error deleting unused tags:', error);
-//     }
-//   }
 
 module.exports = {
     deleteSessiononUser,
@@ -967,7 +934,6 @@ module.exports = {
     deleteQuestion,
     updateQuestion,
     getAllUsers,
-    // getUserData,
     getAnsweredQuestionsByUser,
     getAnswerTextById,
     getTagsByUser,
