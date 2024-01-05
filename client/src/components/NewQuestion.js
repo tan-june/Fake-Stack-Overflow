@@ -76,6 +76,7 @@ class NewQuestion extends React.Component {
     return false;
   }
 
+  
   postQuestion = () => {
     const questionTitle = this.state.questionTitle.trim();
     const questionText = this.state.questionText.trim();

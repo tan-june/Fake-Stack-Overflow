@@ -1,6 +1,13 @@
 import React from "react";
-import { createQuestionElement } from './QuestionandAnswerComponents';
+import {
+  createQuestionElement,
+  newestLoad,
+  activeMode,
+  getUnanswered,
+  checkUser
+} from './QuestionandAnswerComponents';
 import axios from "axios";
+
 class DisplayQofTag extends React.Component {
   constructor(props) {
     super(props);
@@ -47,28 +54,14 @@ class DisplayQofTag extends React.Component {
     this.props.displayA(qid);
   }
 
-  userCheck = () => {
-    axios
-      .get('http://localhost:8000/CheckSession', { withCredentials: true })
-      .then((response) => {
-        const checker = response.data;
-        //console.log(checker);
-  
-        if (checker.validated) {
-          this.setState({ userVerified: true }, () => {
-            //console.log(this.state.userVerified);
-          });
-        } else {
-          this.setState({ userVerified: false }, () => {
-            //console.log(this.state.userVerified);
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
+  userCheck = async () => {
+    try {
+      const validated = await checkUser();
+      this.setState({ userVerified: validated });
+    } catch (error) {
+      console.error("Error checking user:", error);
+    }
   };
-
 
   updateQuestionDetails = () => {
     const startIndex = (this.state.currentPage - 1) * this.state.questionsPerPage;
@@ -77,53 +70,28 @@ class DisplayQofTag extends React.Component {
     createQuestionElement(currentQuestions, this.buttonClicked);
   }
 
-  newestLoad = () => {
-    axios.get("http://localhost:8000/getAllQuestionsAndCount")
-      .then((res) => {
-        const reversedQuestions = res.data.questions.reverse();
-        this.setState({
-          questionCount: res.data.questionCount,
-          questionsArray: reversedQuestions,
-        }, () => {
-          this.updateQuestionDetails();
-        });
-      })
-      .catch((error) => {
-        console.error('Error retrieving questions and question count:', error);
-      });
+  async loadData(callback) {
+    const response = await callback();
+    this.setState({
+      questionCount: response.questionCount,
+      questionsArray: response.questionsArray,
+      currentPage: 1,
+    });
+    this.updateQuestionDetails();
   }
+
+  newestLoad = () => {
+    this.loadData(newestLoad);
+  };
 
   activeMode = () => {
-    axios.get("http://localhost:8000/getActiveQuestionsAndCount")
-      .then((res) => {
-        const reversedQuestions = res.data.questions;
-        this.setState({
-          questionCount: reversedQuestions.length,
-          questionsArray: reversedQuestions,
-        }, () => {
-          this.updateQuestionDetails();
-        });
-      })
-      .catch((error) => {
-        console.error('Error retrieving questions and question count:', error);
-      });
-  }
+    this.loadData(activeMode);
+  };
 
   getUnanswered = () => {
-    axios.get("http://localhost:8000/getUnansweredQuestionsAndCount")
-      .then((res) => {
-        const reversedQuestions = res.data.questions.reverse();
-        this.setState({
-          questionCount: reversedQuestions.length,
-          questionsArray: reversedQuestions,
-        }, () => {
-          this.updateQuestionDetails();
-        });
-      })
-      .catch((error) => {
-        console.error('Error retrieving questions and question count:', error);
-      });
-  }
+    this.loadData(getUnanswered);
+  };
+
 
   handleNextPage = () => {
     this.setState(
@@ -175,10 +143,10 @@ class DisplayQofTag extends React.Component {
           <center>
             <br/>
             <br/>
-            <button style={{ fontFamily: 'Libre Franklin', backgroundColor: '#55a1ff', color: 'white', padding: '10px', border: 'none', borderRadius: '5px', cursor: 'pointer' }} onClick={this.handlePrevPage} disabled={isPrevDisabled}>
+            <button className="paginationButtons" onClick={this.handlePrevPage} disabled={isPrevDisabled}>
               Previous
             </button>
-            <button style={{ marginLeft: '10px', backgroundColor: '#55a1ff', color: 'white', padding: '10px', border: 'none', borderRadius: '5px', cursor: 'pointer' }} onClick={this.handleNextPage} disabled={isNextDisabled}>
+            <button className="paginationButtons" onClick={this.handleNextPage} disabled={isNextDisabled}>
               Next
             </button>
           </center>

@@ -138,7 +138,6 @@ class DefaultPage extends React.Component {
           <div style={{ borderBottom: '1px dotted black', marginLeft: '50px', marginRight: '50px' }}></div>
 
           <div className="questionDetails" id="questionDetails"></div>
-
           <div>
             <center>
               <br />

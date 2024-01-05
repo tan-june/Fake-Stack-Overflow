@@ -70,7 +70,7 @@ class NewLoad extends React.Component {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '95vh' }}>
         <div style={{ width: '50%', padding: '20px', borderRadius: '10px', boxShadow: '0 0 2000px rgba(192, 223, 217, 1)' }}>
           <center><img src="logo512.png" alt="Logo" style={{ width: '80px', margin: '0 auto' }} /></center>
-          <h1 style={{ fontSize: '1.5em', textAlign: 'center' }}>Hello, Welcome to Fake Stack Overflow!</h1>
+          <h1 style={{ fontSize: '1.5em', textAlign: 'center' }}>Fake Stack Overflow</h1>
           <h1 style={{ fontSize: '1.0em', textAlign: 'center', color: 'blue' }}>Developed by Tanmay Singhal</h1>
           <h3 style={{ textAlign: 'center' }}>Choose from one of the following options to continue:</h3>
 

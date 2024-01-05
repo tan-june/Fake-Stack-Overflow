@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import sadface from '../images/sad.png'
+import { checkUser } from "./QuestionandAnswerComponents";
 
 class ModifyAnswer extends React.Component {
     constructor(props) {
@@ -14,46 +15,21 @@ class ModifyAnswer extends React.Component {
     }
 
     componentDidMount(){
-      this.serverCheck();
       this.userCheck();
       if(this.props.questionId){
         this.fetchAnswerData(this.props.questionId)
       }
     }
 
-    serverCheck = () => {
-      axios
-        .get('http://localhost:8000/show')
-        .then((response) => {
-          this.setState({ isServerNull: true });
-        })
-        .catch((error) => {
-          this.setState({ isServerNull: false });
-        });
+    userCheck = async () => {
+      try {
+        const validated = await checkUser();
+        this.setState({ userVerified: validated });
+      } catch (error) {
+        console.error("Error checking user:", error);
+      }
     };
-
-    userCheck = () => {
-        axios
-          .get('http://localhost:8000/CheckSession', { withCredentials: true })
-          .then((response) => {
-            const checker = response.data;
-            //console.log(checker);
-      
-            if (checker.validated) {
-              this.setState({ userVerified: true }, () => {
-                //console.log(this.state.userVerified);
-              });
-            } else {
-              this.setState({ userVerified: false }, () => {
-                //console.log(this.state.userVerified);
-              });
-            }
-          })
-          .catch((error) => {
-            console.error("Error", error);
-          });
-    };
-
+    
     deleteAnswer = () => {
       axios.post(
         `http://localhost:8000/deleteAnswer`,
@@ -61,17 +37,12 @@ class ModifyAnswer extends React.Component {
         { withCredentials: true }
       )
         .then((response) => {
-          //console.log(response.data);
-          // this.setState({answerText: ''})
         })
         .catch((error) => {
           console.error('Error deleting question:', error);
         });
         this.props.backtoUser();
     };
-    
-  
-      
 
     checkInput = () => {
         const text = this.state.answerText.trim();
@@ -113,7 +84,6 @@ class ModifyAnswer extends React.Component {
 
     postAnswerreCheck = () => {
       const isInputValid = this.checkInput();
-
       if (isInputValid) {
         this.postAnswer();
       }
@@ -122,20 +92,12 @@ class ModifyAnswer extends React.Component {
   postAnswer = () => {
       const { answerText } = this.state;
       const modifiedAnswerText = answerText.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-
       if (modifiedAnswerText) {
-          
           const postValues = {
               text: modifiedAnswerText,
               answerID: this.props.questionId,
           }
-
           axios.post('http://localhost:8000/updateAnswer', postValues, {withCredentials: true});
-          
-          // this.setState({
-          //     answerText: "",
-          // });
-          
           this.props.backtoUser();
        }
   };
@@ -143,12 +105,8 @@ class ModifyAnswer extends React.Component {
     fetchAnswerData = (answerId) => {
       axios.get(`http://localhost:8000/getAnswerTextById/${answerId}`)
         .then((response) => {
-          // const answerData = response.data;
-          //console.log('Answer Data:', answerData);
           this.setState({
             answerText: response.data.answerText,
-          }, () => {
-            //console.log('Component State:', this.state);
           });
         })
         .catch((error) => {
@@ -157,12 +115,8 @@ class ModifyAnswer extends React.Component {
     };
        
     render() {
-        // const { answerText } = this.state;
-        //console.log('Answer Text in Render:', answerText);
-        let content;
-        
         if(this.state.userVerified){
-          content = (
+          return (
           <div style={{ margin: '5% auto', width: '60%', backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', padding: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h1><center>&nbsp;&nbsp;Modify Answer</center></h1>
@@ -210,27 +164,8 @@ class ModifyAnswer extends React.Component {
       
       )        
       }
-      else if(!this.state.isServerNull){
-        return (
-          <div>
-  
-            <center>
-              <div style={{ textAlign: 'center', marginTop: '50px' }}>
-                <img src={sadface} alt="Sad Face" width="100" />
-                <h1>Server Error! :(</h1>
-                <h3>Please refresh the page!</h3>
-  
-                <a className="left-panel-buttons blue"
-                  style={{ marginRight: '10px' }}
-                  href="/" onClick={() => window.location.href = '/'}> Refresh </a>
-              </div>
-            </center>
-          </div>
-  
-        )
-      }
       else{
-          content = (
+        return (
               <div>
               
               <center>
@@ -247,13 +182,6 @@ class ModifyAnswer extends React.Component {
               </div>
               );
       }
-
-        return (
-            <div>
-                {content}
-            </div>
-            // {content}
-        );
     }
 }
 
