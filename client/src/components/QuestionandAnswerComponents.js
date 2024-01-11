@@ -49,7 +49,6 @@ export const createQuestionElement = (questions, buttonClick) => {
       });
       const questionLink = divElement.querySelector('#questionLink');
       questionLink.addEventListener('click', () => {
-          //console.log(question._id);
           buttonClick(question._id);
       });
   });

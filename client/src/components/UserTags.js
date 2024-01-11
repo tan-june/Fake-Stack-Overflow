@@ -26,20 +26,10 @@ class UserTags extends React.Component {
   componentDidMount() {
     this.userCheck();
     this.getUserTags();
-
-    axios.get(`http://localhost:8000/getTagsByUser?id=${this.props.userID}`, { withCredentials: true })
-    .then((res) => {
- 
-      this.setState({
-        tagsWithCount: res.data.userTags,
-      });
-    })
-    .catch((error) => {
-      console.error('Error retrieving tags and questions count:', error);
-    });
   }
-  getUserTags() {
-    axios
+
+  getUserTags = async () => {
+    await axios
       .get(`http://localhost:8000/getTagsByUser?id=${this.props.userID}`, { withCredentials: true })
       .then((res) => {
         this.setState({
@@ -62,14 +52,11 @@ class UserTags extends React.Component {
         window.alert('Failed to delete tag name. You are not the only user using this tag.');
       });
   }
+
   handleModifyTag(tag) {
     this.setState({ inputValue: tag.name, modifiedTagName: tag.name });
   }
 
-  handleInputChange(e) {
-    this.setState({ inputValue: e.target.value });
-  }
- 
   handleSaveClick(tag) {
     const { inputValue } = this.state;  
     axios
@@ -101,7 +88,7 @@ class UserTags extends React.Component {
             <input
               type="text"
               value={this.state.inputValue}
-              onChange={(e) => this.handleInputChange(e)}
+              onChange={(e) => this.setState({ inputValue: e.target.value })}
             />
             <br />
             <button
@@ -126,8 +113,6 @@ class UserTags extends React.Component {
           </u>
             <br />
             {tag.count} question(s)
-
-            {/* Add modify and delete buttons */}
             {this.state.userVerified && (
               <div>
                 <button

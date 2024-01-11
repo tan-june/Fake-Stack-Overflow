@@ -37,7 +37,7 @@ The technologies used in this project include:
    node server/init.js adminUsername adminPassword
    ```
 
-   *Default admin email is set to:* admin@fake_so.com
+   *Default admin email is set to:* admin@fakeso.com
 
 3. **Run the following commands in separate terminals:**
 
@@ -71,7 +71,7 @@ The technologies used in this project include:
 
 ### Additional Admin Users:
 
-1. Email: 'admin2@fake_so.com', Username: 'admin2', Password: 'cse316'
-2. Email: 'admin3@fake_so.com', Username: 'admin3', Password: 'cse316'
+1. Email: 'admin2@fakeso.com', Username: 'admin2', Password: 'cse316'
+2. Email: 'admin3@fakeso.com', Username: 'admin3', Password: 'cse316'
 
 Feel free to explore and test the application using the provided credentials!

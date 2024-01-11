@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import BadRender from './BadRender';
 import user1image from '../images/user1Image.png';
+import { checkUser } from './QuestionandAnswerComponents';
 
 class UserDisplay extends React.Component {
   constructor(props) {
@@ -22,20 +23,13 @@ class UserDisplay extends React.Component {
     });
   }
 
-  userCheck = () => {
-    axios
-      .get('http://localhost:8000/CheckSession', { withCredentials: true })
-      .then((response) => {
-        const checker = response.data;
-        if (checker.validated) {
-          this.setState({ userVerified: true });
-        } else {
-          this.setState({ userVerified: false });
-        }
-      })
-      .catch((error) => {
-        console.error('Error', error);
-      });
+  userCheck = async () => {
+    try {
+      const validated = await checkUser();
+      this.setState({ userVerified: validated});
+    } catch (error) {
+      console.error("Error checking user:", error);
+    }
   };
 
   componentDidMount = () => {

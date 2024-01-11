@@ -18,6 +18,7 @@ import logoutbutton from "../images/logout_button.png";
 import homeButton from "../images/home.png";
 import DisplayTags from "./DisplayTags"
 import axios from "axios";
+import { checkUser } from "./QuestionandAnswerComponents";
 
 class FakeStackOverflow extends React.Component {
   constructor(props) {
@@ -40,16 +41,15 @@ class FakeStackOverflow extends React.Component {
     }, 100);
   }
 
-  userCheck = () => {
-    axios.get("http://localhost:8000/CheckSession", { withCredentials: true })
-      .then((response) => {
-        this.setState({ userVerified: response.data.validated });
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
+  userCheck = async () => {
+    try {
+      const validated = await checkUser();
+      this.setState({ userVerified: validated });
+    } catch (error) {
+      console.error("Error checking user:", error);
+    }
   };
-  
+ 
 
   setShowTags = () => {
     this.setState({

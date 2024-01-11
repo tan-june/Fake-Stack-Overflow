@@ -223,9 +223,6 @@ class NewQuestion extends React.Component {
     <div style={{ color: 'red', fontSize: '14px' }}>* indicates mandatory fields</div>
   </div>
 </div>
-
-
-
 </div>
   )   
   }
@@ -247,8 +244,6 @@ class NewQuestion extends React.Component {
           </div>
           );
   }
-
-
 }
 }
 

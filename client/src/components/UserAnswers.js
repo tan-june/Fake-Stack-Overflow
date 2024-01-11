@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { createQuestionElement } from './QuestionandAnswerComponents';
+import { checkUser, createQuestionElement } from './QuestionandAnswerComponents';
 
 class UserAnswers extends Component {
   constructor(props) {
@@ -10,33 +10,16 @@ class UserAnswers extends Component {
       currentPage: 1,
       questionsPerPage: 5,
       userVerified: false,
-      usertype: 'Standard User'
     };
   }
 
-  componentWillUnmount(){
-    this.setState({userVerified: false});
-  }
-
-  userCheck = () => {
-    axios
-      .get('http://localhost:8000/CheckSession', { withCredentials: true })
-      .then((response) => {
-        const checker = response.data;
-  
-        if (checker.validated) {
-          this.setState({ userVerified: true, usertype: response.data.user.usertype}, () => {
-           
-          });
-        } else {
-          this.setState({ userVerified: false }, () => {
-           
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
+  userCheck = async () => {
+    try {
+      const validated = await checkUser();
+      this.setState({ userVerified: validated });
+    } catch (error) {
+      console.error("Error checking user:", error);
+    }
   };
 
   componentDidMount() {
@@ -47,15 +30,12 @@ class UserAnswers extends Component {
   }
 
   fetchUserAnswers = () => {
-    const requestBody = {
-        id: this.props.userID,
-    };
-    axios.post('http://localhost:8000/getAnsweredQuestionsByUser', requestBody, { withCredentials: true })
+    axios.post('http://localhost:8000/getAnsweredQuestionsByUser', { id: this.props.userID }, { withCredentials: true })
       .then((response) => {
         if (response.data) {
           this.setState({ userAnswers: response.data.reverse() }, () => {
             this.updateQuestionDetails();
-        });        
+          });
         } else {
           console.error('Invalid response format. Expected an array.');
         }
@@ -63,7 +43,7 @@ class UserAnswers extends Component {
       .catch((error) => {
         console.error('Error retrieving user answers:', error);
       });
-};
+  };
 
   updateQuestionDetails = () => {
     const startIndex = (this.state.currentPage - 1) * this.state.questionsPerPage;
@@ -71,13 +51,9 @@ class UserAnswers extends Component {
     const currentQuestions = this.state.userAnswers.slice(startIndex, endIndex);
     createQuestionElement(currentQuestions, this.buttonClicked);
   }
-  
+
   buttonClicked = (qid) => {
-    if (typeof this.props.DisplayUserA === 'function') {
-      this.props.DisplayUserA(qid);
-    } else {
-      console.error('DisplayUserA is not a function');
-    }
+    this.props.DisplayUserA(qid);
   }
 
   handleNextPage = () => {
@@ -101,16 +77,17 @@ class UserAnswers extends Component {
 
     return (
       <div>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h2 style={{color: 'red'}}>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h2 style={{ color: 'red' }}>
           <center>
-          Please click on a question to view and modify/delete your answers.
+            Please click on a question to view and modify/delete your answers.
           </center>
-          </h2>
+        </h2>
 
-          <h3 style={{color: 'blue'}}>
+        <h3 style={{ color: 'blue' }}>
           <center>
-If you don't see any questions below, you have not answered any questions.          </center>
-          </h3>
+            You have not answered any questions, please navigated to the questions page to potentially answer questions!
+          </center>
+        </h3>
         <div className="questionDetails" id="questionDetails">
         </div>
         <div>
@@ -118,15 +95,15 @@ If you don't see any questions below, you have not answered any questions.      
             <br />
             <br />
             <button
-           className="paginationButtons"
+              className="paginationButtons"
               onClick={this.handlePrevPage}
               disabled={isPrevDisabled}
             >
               Previous
             </button>
             <button
-                className="paginationButtons"
-                
+              className="paginationButtons"
+
               onClick={this.handleNextPage}
               disabled={isNextDisabled}
             >

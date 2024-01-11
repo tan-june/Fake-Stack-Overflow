@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import BadRender from "./BadRender";
 import adminimage from "../images/adminImage.png";
+import { checkUser } from "./QuestionandAnswerComponents";
 
 class AdminViewofUser extends React.Component {
   constructor(props) {
@@ -39,22 +40,15 @@ class AdminViewofUser extends React.Component {
     }
   };
 
-  userCheck = () => {
-    axios
-      .get("http://localhost:8000/CheckSession", { withCredentials: true })
-      .then((response) => {
-        const checker = response.data;
-        if (checker.validated) {
-          this.setState({ userVerified: true, currentUser: response.data.user });
-        } else {
-          this.setState({ userVerified: false });
-        }
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
+  userCheck = async () => {
+    try {
+      const validated = await checkUser();
+      this.setState({ userVerified: validated});
+    } catch (error) {
+      console.error("Error checking user:", error);
+    }
   };
-
+ 
   componentDidMount = () => {
     this.userCheck();
     axios

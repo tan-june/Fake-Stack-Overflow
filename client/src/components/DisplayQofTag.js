@@ -12,7 +12,7 @@ class DisplayQofTag extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      questionCount: 0,
+      questionCount: 0,  
       questionsArray: [],
       currentPage: 1,
       questionsPerPage: 5,

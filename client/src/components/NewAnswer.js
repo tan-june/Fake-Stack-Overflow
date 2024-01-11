@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import sadface from '../images/sad.png'
-
+import { checkUser } from "./QuestionandAnswerComponents";
 class NewAnswer extends React.Component {
     constructor(props) {
         super(props);
@@ -28,28 +28,14 @@ class NewAnswer extends React.Component {
         });
     };
 
-    userCheck = () => {
-        axios
-          .get('http://localhost:8000/CheckSession', { withCredentials: true })
-          .then((response) => {
-            const checker = response.data;
-            //console.log(checker);
-      
-            if (checker.validated) {
-              this.setState({ userVerified: true }, () => {
-                //console.log(this.state.userVerified);
-              });
-            } else {
-              this.setState({ userVerified: false }, () => {
-                //console.log(this.state.userVerified);
-              });
-            }
-          })
-          .catch((error) => {
-            console.error("Error", error);
-          });
-      };
-      
+    userCheck = async () => {
+      try {
+        const validated = await checkUser();
+        this.setState({ userVerified: validated});
+      } catch (error) {
+        console.error("Error checking user:", error);
+      }
+    };
 
     checkInput = () => {
         const text = this.state.answerText.trim();

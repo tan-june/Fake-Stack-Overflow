@@ -216,7 +216,7 @@ app.post('/LoginCredentials', async (req, res) => {
     res.cookie('values_88242', session.userHashed, {
         httpOnly: true,
         secure: true,
-        maxAge: threeHours,
+        maxAge: 10800000,
     });      
 
       res.send({ validityCheck: 200 });

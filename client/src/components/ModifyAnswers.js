@@ -10,7 +10,6 @@ class ModifyAnswer extends React.Component {
             answerid:'',
             answerText: '',
             userVerified: false,
-            isServerNull: false,
         };
     }
 
